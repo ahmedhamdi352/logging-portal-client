@@ -1,0 +1,12 @@
+.invoice-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3f5161;
+}
+.invoice-version {
+  font-size: 20px;
+  color: #3f5161;
+}
+.ant-table {
+  color: #333 !important;
+}
