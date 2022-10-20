@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { InputField, Button, DatePickerField, SelectField } from '../inputs';
-import logsActions from '../../redux/logs/actions';
+import logsActions from '../../redux/logging/actions';
 import moment from 'moment';
 const { submitLogs } = logsActions;
 
