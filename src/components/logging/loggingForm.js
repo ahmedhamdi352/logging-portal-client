@@ -15,7 +15,7 @@ const ChangePasswordForm = () => {
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      date: '', knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
+      date: moment(), knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
       learning: 0, planned: 0, externalSupport: 0, internalSupport: 0
     },
   });
@@ -40,7 +40,7 @@ const ChangePasswordForm = () => {
       'date': moment(values.date).format('DD-MMM'),
       'collaboration': values.knowledgeSharing + values.teamMeetings + values.dailyStandup,
       'support': values.internalSupport + values.externalSupport,
-      'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup, values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
+      'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup + values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
     }))
     reset()
   };
@@ -57,6 +57,7 @@ const ChangePasswordForm = () => {
             type="number"
             errors={errors}
             rules={{ required: 'Required Field' }}
+            disabled
           />
         </div>
 

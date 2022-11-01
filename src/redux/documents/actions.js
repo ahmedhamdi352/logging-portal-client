@@ -38,6 +38,17 @@ const actions = {
         dispatch({ type: actions.GET_DOCS_ERROR });
       });
   },
+  submitslogs: (data) => (dispatch) => {
+    axios
+      .post(`${ROOT_URL}/api/logs/logs`, { 'res': data })
+      .then((res) => {
+        console.log(res.data)
+        // dispatch({ type: actions.GET_DOCS, payload: res.data });
+      })
+      .catch((err) => {
+        dispatch({ type: actions.GET_DOCS_ERROR });
+      });
+  },
   getDocumentById: (documentId) => (dispatch) => {
     axios
       .get(`${ROOT_URL}/api/docs/${documentId}`)
