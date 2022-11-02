@@ -12,7 +12,7 @@ const DocumentsTable = ({ docs }) => {
       name: 'day',
       label: 'Day',
       options: {
-        filter: false,
+        filter: true,
         sort: false,
       },
     },
@@ -20,8 +20,8 @@ const DocumentsTable = ({ docs }) => {
       name: 'date',
       label: 'Date',
       options: {
-        filter: false,
-        sort: false,
+        filter: true,
+        sort: true,
       },
     },
     {
@@ -60,14 +60,16 @@ const DocumentsTable = ({ docs }) => {
       name: 'manHour',
       label: 'Man Hours',
       options: {
-        filter: false,
+        filter: true,
         sort: false,
       },
     },
   ];
 
   const options = {
-    filter: false,
+    filter: true,
+    filterType: 'dropdown',
+
     search: false,
     download: false,
     print: false,

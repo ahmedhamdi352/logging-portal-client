@@ -7,8 +7,11 @@ import Loader from '../../../components/utility/loader';
 import docsActions from '../../../redux/documents/actions';
 import DocumentsTable from '../../../components/documents/documentsTable';
 import { Layout } from 'antd';
+import readXlsxFile from 'read-excel-file'
+import { drop } from 'lodash'
+import moment from 'moment';
 
-const { getDocuments, flushDocument } = docsActions;
+const { getDocuments, flushDocument, submitslogs } = docsActions;
 
 const { Content } = Layout;
 
@@ -16,6 +19,7 @@ const AllDocuments = () => {
   const [docs, setDocs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const documents = useSelector(({ documents }) => documents.documents);
+  const { user } = useSelector(({ Auth }) => Auth);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDocuments());
@@ -36,17 +40,54 @@ const AllDocuments = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          <div
-            style={{
-              borderRadius: '10px',
-              boxShadow: '0 7px 12px 0 rgba(22,37,63,.09)',
-              background: '#fff',
-              //   padding: 24,
-              //   minHeight: 380,
-              // minHeight: 400,
-            }}
-          >
-            <DocumentsTable docs={docs} />
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', width: '100%' }}>
+            <label for="file-upload" class="custom-file-upload" style={{
+              padding: '6px 12px',
+              color: 'white', backgroundColor: '#2D3446',
+              borderRadius: '4px', cursor: 'pointer', border: '1px solid #ccc'
+            }}>
+              Custom Upload
+            </label>
+            <input id="file-upload" type="file" style={{ display: 'none' }}
+              onChange={(e) => {
+                readXlsxFile(e.target.files[0]).then((rows) => {
+                  rows = drop(rows)
+                  console.log(rows.length)
+                  const res = rows.map((item => {
+                    return {
+                      'day': item[0],
+                      'date': moment(item[1]).format('DD-MMM'),
+                      'knowledgeSharing': item[2],
+                      'teamMeetings': item[3],
+                      'dailyStandup': item[4],
+                      'collaboration': item[5],
+                      'learning': item[6],
+                      'planned': item[7],
+                      'internalSupport': item[8],
+                      'externalSupport': item[9],
+                      'support': item[10],
+                      'manHour': item[12],
+                      'user': { internalId: user?.id },
+                    }
+                  }))
+                  console.log(res)
+                  dispatch(submitslogs(res))
+                  // `rows` is an array of rows
+                  // each row being an array of cells.
+                })
+              }
+              }
+            />
+            <div
+              style={{
+                borderRadius: '10px',
+                boxShadow: '0 7px 12px 0 rgba(22,37,63,.09)',
+                background: '#fff',
+                width: '100%'
+              }}
+            >
+              <DocumentsTable docs={docs} />
+            </div>
           </div>
         )}
       </Content>
