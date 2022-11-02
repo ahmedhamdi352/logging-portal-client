@@ -5,6 +5,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import LayoutWrapper from '../../../components/utility/layoutWrapper.js';
 import Loader from '../../../components/utility/loader';
 import docsActions from '../../../redux/documents/actions';
+import toaster from '../../../redux/toaster/actions';
+
 import DocumentsTable from '../../../components/documents/documentsTable';
 import { Layout } from 'antd';
 import readXlsxFile from 'read-excel-file'
@@ -17,8 +19,10 @@ const { Content } = Layout;
 
 const AllDocuments = () => {
   const [docs, setDocs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const documents = useSelector(({ documents }) => documents.documents);
+  const loading = useSelector(({ documents }) => documents.loading);
+  console.log(loading)
   const { user } = useSelector(({ Auth }) => Auth);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -30,14 +34,13 @@ const AllDocuments = () => {
   useEffect(() => {
     if (documents) {
       setDocs(documents);
-      setIsLoading(false);
     }
   }, [documents]);
 
   return (
     <LayoutWrapper>
       <Content style={{ padding: '0 20px', marginTop: '-10px' }}>
-        {isLoading ? (
+        {loading ? (
           <Loader />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', width: '100%' }}>
@@ -50,31 +53,48 @@ const AllDocuments = () => {
             </label>
             <input id="file-upload" type="file" style={{ display: 'none' }}
               onChange={(e) => {
-                readXlsxFile(e.target.files[0]).then((rows) => {
-                  rows = drop(rows)
-                  console.log(rows.length)
-                  const res = rows.map((item => {
-                    return {
-                      'day': item[0],
-                      'date': moment(item[1]).format('DD-MMM'),
-                      'knowledgeSharing': item[2],
-                      'teamMeetings': item[3],
-                      'dailyStandup': item[4],
-                      'collaboration': item[5],
-                      'learning': item[6],
-                      'planned': item[7],
-                      'internalSupport': item[8],
-                      'externalSupport': item[9],
-                      'support': item[10],
-                      'manHour': item[12],
-                      'user': { internalId: user?.id },
+                if (e.target.files[0]?.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                  readXlsxFile(e.target.files[0]).then((rows) => {
+                    if (rows[0]?.includes('Days') && rows[0]?.includes('Date') && rows[0]?.includes('Knowledge Sharing') && rows[0]?.includes('Team Meetings')
+                      && rows[0]?.includes('Daily Standup') && rows[0]?.includes('Collaboration') && rows[0]?.includes('Learning') && rows[0]?.includes('Breaking')
+                      && rows[0]?.includes('Planned') && rows[0]?.includes('Internal Support') && rows[0]?.includes('External Support') && rows[0]?.includes('Support')
+                      && rows[0]?.includes('vacation') && rows[0]?.includes('Manhour')) {
+                      rows = drop(rows)
+                      const res = rows.map((item => {
+                        return {
+                          'day': item[0],
+                          'date': moment(item[1]).format('DD-MMM'),
+                          'knowledgeSharing': item[2],
+                          'teamMeetings': item[3],
+                          'dailyStandup': item[4],
+                          'collaboration': item[5],
+                          'learning': item[6],
+                          'planned': item[7],
+                          'internalSupport': item[8],
+                          'externalSupport': item[9],
+                          'support': item[10],
+                          'manHour': item[12],
+                          'user': { internalId: user?.id },
+                        }
+                      }))
+                      const check = res.filter(item => {
+                        return docs.map(d => {
+                          if (d.date === item.date) {
+                            return item
+                          }
+                        })
+                      })
+                      if (check.length === 0) {
+                        dispatch(submitslogs(res))
+                      }
+                      else dispatch(toaster.triggerError(`You already have a log on date ${check[0]?.date}`));
                     }
-                  }))
-                  console.log(res)
-                  dispatch(submitslogs(res))
-                  // `rows` is an array of rows
-                  // each row being an array of cells.
-                })
+                    else dispatch(toaster.triggerError(`Failed to upload .... wrong file structure `));
+                  })
+                }
+                else dispatch(toaster.triggerError(`Failed to upload .... wrong file type`));
+
+
               }
               }
             />

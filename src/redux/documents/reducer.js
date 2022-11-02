@@ -1,11 +1,17 @@
 import actions from './actions';
 
-const initState = { documents: null, selectedDocument: null, error: null, selectedDocumentJson: null, needNewOtp: false };
+const initState = { editRecord: null, documents: null, selectedDocument: null, error: null, selectedDocumentJson: null, needNewOtp: false, loading: false };
 
 export default function reducer(state = initState, action) {
   switch (action.type) {
     case actions.GET_DOCS: {
       return { ...state, documents: action.payload };
+    }
+    case actions.SET_LOGGING_LOADING: {
+      return { ...state, loading: action.payload };
+    }
+    case actions.SET_EDIT_RECORD: {
+      return { ...state, editRecord: action.payload };
     }
     case actions.GET_DOCS_ERROR: {
       return { ...state, documents: [] };
@@ -56,7 +62,8 @@ export default function reducer(state = initState, action) {
       return { ...state, selectedDocumentJson: action.payload };
     }
     case actions.FLUSH_DOC: {
-      return initState;
+      const res = state.editRecord
+      return { ...initState, editRecord: res };
     }
 
     case actions.NEDD_NEW_OTP: {

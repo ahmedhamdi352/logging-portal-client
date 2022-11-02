@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
@@ -10,8 +10,10 @@ const { submitLogs } = logsActions;
 const ChangePasswordForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(({ Auth }) => Auth);
+  const { editRecord } = useSelector(({ documents }) => documents.editRecord);
 
-  const { handleSubmit, control, formState, errors, reset, watch } = useForm({
+
+  const { handleSubmit, control, formState, errors, reset, watch, defaultValues } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
@@ -19,6 +21,12 @@ const ChangePasswordForm = () => {
       learning: 0, planned: 0, externalSupport: 0, internalSupport: 0
     },
   });
+
+  // useEffect(() => {
+  //   if (editRecord !== null) {
+  //     reset(editRecord);
+  //   }
+  // }, [editRecord, reset]);
 
   const options = [
     { id: 0, value: '0' },

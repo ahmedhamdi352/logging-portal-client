@@ -1,11 +1,52 @@
 import React, { useState } from 'react';
 import { Button } from 'antd';
+import { Link } from 'react-router-dom';
 import MUIDataTable from 'mui-datatables';
-import { isEmpty } from '../../../helpers/utility';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteModal from '../../common/modal';
+import { useDispatch } from 'react-redux';
+import LogsActions from '../../../redux/documents/actions'
 
 const DocumentsTable = ({ docs }) => {
+  const { deletLog, setEditRecord } = LogsActions
+  const dispatch = useDispatch();
+
+  const [deletedRecord, setdeletedRecord] = useState(null);
+  const [deletedAlert, setDeletedAlert] = useState(false);
+  const [editable, setEditable] = useState(null);
+  const [updateLogModalVisible, setUpdateLogModalVisible] = useState(false);
+
+
+  const deleteRecord = (record) => {
+    setdeletedRecord(record)
+    setDeletedAlert(true)
+  }
+
+  const handleCancelDelete = () => {
+    setdeletedRecord(null)
+    setDeletedAlert(false)
+  }
+
+  const deleteAction = () => {
+    dispatch(deletLog(deletedRecord))
+    setDeletedAlert(false)
+  }
+
+  const openEditLogModal = (id) => {
+    console.log(docs)
+    const log = docs.filter(item => item.internalId === id)
+    console.log(log)
+    setUpdateLogModalVisible(true);
+    if (log.length !== 0) {
+      dispatch(setEditRecord(log[0]))
+    }
+  };
+
+  const closeEditLogModal = () => {
+    setUpdateLogModalVisible(false);
+    setEditable(null);
+  };
 
   const columns = [
     {
@@ -64,6 +105,30 @@ const DocumentsTable = ({ docs }) => {
         sort: false,
       },
     },
+    {
+      name: 'internalId',
+      label: 'Actions',
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+              {/* <Button onClick={() => openEditLogModal(value)}>
+                <Link to="/dashboard/log">
+                  <EditIcon style={{ color: '#1890FF' }} />
+                </Link>
+              </Button> */}
+              <Button onClick={() => {
+                deleteRecord(value)
+              }}>
+                <DeleteIcon style={{ color: 'red' }} />
+              </Button>
+            </div>
+          );
+        },
+      },
+    },
   ];
 
   const options = {
@@ -97,6 +162,8 @@ const DocumentsTable = ({ docs }) => {
         columns={columns}
         options={options}
       />
+      <DeleteModal visible={deletedAlert} handleCancel={handleCancelDelete} deleteAction={deleteAction} />
+      {/* <UpdateLogModal editable={editable} visible={updateLogModalVisible} handleCancel={() => closeEditLogModal()} /> */}
     </>
   );
 };

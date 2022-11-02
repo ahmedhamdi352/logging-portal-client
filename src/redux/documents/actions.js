@@ -26,27 +26,49 @@ const actions = {
   GET_DOC_JSON_ERROR: 'GET_DOC_JSON_ERROR',
 
   NEDD_NEW_OTP: 'NEDD_NEW_OTP',
+  SET_LOGGING_LOADING: 'SET_LOGGING_LOADING',
+  SET_EDIT_RECORD: 'SET_EDIT_RECORD',
 
-  getDocuments: (type) => (dispatch) => {
+  getDocuments: () => (dispatch) => {
+    dispatch({ type: actions.SET_LOGGING_LOADING, payload: true })
     axios
       .get(`${ROOT_URL}/api/logs`)
       .then((res) => {
-        console.log(res.data)
+        dispatch({ type: actions.SET_LOGGING_LOADING, payload: false })
         dispatch({ type: actions.GET_DOCS, payload: res.data });
+      })
+      .catch((err) => {
+        dispatch({ type: actions.SET_LOGGING_LOADING, payload: false })
+        dispatch({ type: actions.GET_DOCS_ERROR });
+      });
+  },
+  setEditRecord: (data) => (dispatch) => {
+    dispatch({ type: actions.SET_EDIT_RECORD, payload: data })
+  },
+  submitslogs: (data) => (dispatch) => {
+    dispatch({ type: actions.SET_LOGGING_LOADING, payload: true })
+    axios
+      .post(`${ROOT_URL}/api/logs/logs`, { 'res': data })
+      .then((res) => {
+        dispatch(toaster.triggerSuccess('Your Logs uploaded successfully'));
+        dispatch(actions.getDocuments())
       })
       .catch((err) => {
         dispatch({ type: actions.GET_DOCS_ERROR });
       });
   },
-  submitslogs: (data) => (dispatch) => {
+  deletLog: (id) => (dispatch) => {
+    dispatch({ type: actions.SET_LOGGING_LOADING, payload: true })
     axios
-      .post(`${ROOT_URL}/api/logs/logs`, { 'res': data })
+      .delete(`${ROOT_URL}/api/logs/logs/${id}`)
       .then((res) => {
-        console.log(res.data)
-        // dispatch({ type: actions.GET_DOCS, payload: res.data });
+        dispatch(toaster.triggerSuccess('Log deleted successfully'));
+        dispatch(actions.getDocuments())
       })
       .catch((err) => {
         dispatch({ type: actions.GET_DOCS_ERROR });
+        let errorMsg = err.response?.data?.error;
+        dispatch(toaster.triggerError(errorMsg));
       });
   },
   getDocumentById: (documentId) => (dispatch) => {
