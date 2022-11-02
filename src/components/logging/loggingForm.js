@@ -40,7 +40,7 @@ const ChangePasswordForm = () => {
       'date': moment(values.date).format('DD-MMM'),
       'collaboration': values.knowledgeSharing + values.teamMeetings + values.dailyStandup,
       'support': values.internalSupport + values.externalSupport,
-      'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup, values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
+      'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup + values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
     }))
     reset()
   };
