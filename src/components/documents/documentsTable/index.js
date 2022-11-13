@@ -5,8 +5,10 @@ import MUIDataTable from 'mui-datatables';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteModal from '../../common/modal';
+import UpdateLogModal from '../../common/updateLog'
 import { useDispatch } from 'react-redux';
 import LogsActions from '../../../redux/documents/actions'
+import moment from 'moment';
 
 const DocumentsTable = ({ docs }) => {
   const { deletLog, setEditRecord } = LogsActions
@@ -34,12 +36,10 @@ const DocumentsTable = ({ docs }) => {
   }
 
   const openEditLogModal = (id) => {
-    console.log(docs)
     const log = docs.filter(item => item.internalId === id)
-    console.log(log)
     setUpdateLogModalVisible(true);
     if (log.length !== 0) {
-      dispatch(setEditRecord(log[0]))
+      setEditable(log[0])
     }
   };
 
@@ -62,7 +62,32 @@ const DocumentsTable = ({ docs }) => {
       label: 'Date',
       options: {
         filter: true,
-        sort: true,
+        sort: false,
+        display: true,
+        customFilterListOptions: {
+          render: v => `Month: ${v}`,
+          update: (filterList, filterPos, index) => {
+            console.log('update');
+            console.log(filterList, filterPos, index);
+            return filterList;
+          }
+        },
+        filterOptions: {
+          names: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          logic: (data, filters, row) => {
+            console.log(moment(data).format('MMM'))
+            if (filters.length) return !filters.includes(moment(data).format('MMM'));
+            return false;
+
+          },
+        },
+        customBodyRender: (value) => {
+          return (
+            <div>
+              {moment(value).format('DD-MMM')}
+            </div>
+          )
+        }
       },
     },
     {
@@ -101,7 +126,7 @@ const DocumentsTable = ({ docs }) => {
       name: 'manHour',
       label: 'Man Hours',
       options: {
-        filter: true,
+        filter: false,
         sort: false,
       },
     },
@@ -114,11 +139,11 @@ const DocumentsTable = ({ docs }) => {
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-              {/* <Button onClick={() => openEditLogModal(value)}>
-                <Link to="/dashboard/log">
-                  <EditIcon style={{ color: '#1890FF' }} />
-                </Link>
-              </Button> */}
+              <Button onClick={() => openEditLogModal(value)}>
+                {/* <Link to="/dashboard/log"> */}
+                <EditIcon style={{ color: '#1890FF' }} />
+                {/* </Link> */}
+              </Button>
               <Button onClick={() => {
                 deleteRecord(value)
               }}>
@@ -163,7 +188,7 @@ const DocumentsTable = ({ docs }) => {
         options={options}
       />
       <DeleteModal visible={deletedAlert} handleCancel={handleCancelDelete} deleteAction={deleteAction} />
-      {/* <UpdateLogModal editable={editable} visible={updateLogModalVisible} handleCancel={() => closeEditLogModal()} /> */}
+      <UpdateLogModal editable={editable} visible={updateLogModalVisible} handleCancel={() => closeEditLogModal()} />
     </>
   );
 };

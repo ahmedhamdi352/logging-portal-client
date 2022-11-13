@@ -1,7 +1,8 @@
 import axios from 'axios';
 import toaster from '../toaster/actions';
 import { ROOT_URL } from '../keys';
-
+import { sortBy, reverse } from 'lodash';
+import moment from 'moment';
 const actions = {
   // Get documents
   GET_DOCS: 'GET_DOCS',
@@ -34,8 +35,9 @@ const actions = {
     axios
       .get(`${ROOT_URL}/api/logs`)
       .then((res) => {
+        console.log(sortBy(res?.data, (item) => moment(item.date)))
         dispatch({ type: actions.SET_LOGGING_LOADING, payload: false })
-        dispatch({ type: actions.GET_DOCS, payload: res.data });
+        dispatch({ type: actions.GET_DOCS, payload: reverse(sortBy(res?.data, (item) => moment(item.date))) });
       })
       .catch((err) => {
         dispatch({ type: actions.SET_LOGGING_LOADING, payload: false })

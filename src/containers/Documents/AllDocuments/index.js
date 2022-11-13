@@ -22,7 +22,6 @@ const AllDocuments = () => {
   // const [isLoading, setIsLoading] = useState(true);
   const documents = useSelector(({ documents }) => documents.documents);
   const loading = useSelector(({ documents }) => documents.loading);
-  console.log(loading)
   const { user } = useSelector(({ Auth }) => Auth);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -63,7 +62,7 @@ const AllDocuments = () => {
                       const res = rows.map((item => {
                         return {
                           'day': item[0],
-                          'date': moment(item[1]).format('DD-MMM'),
+                          'date': moment(item[1]),
                           'knowledgeSharing': item[2],
                           'teamMeetings': item[3],
                           'dailyStandup': item[4],
@@ -77,12 +76,15 @@ const AllDocuments = () => {
                           'user': { internalId: user?.id },
                         }
                       }))
-                      const check = res.filter(item => {
-                        return docs.map(d => {
-                          if (d.date === item.date) {
-                            return item
-                          }
-                        })
+                      const check = []
+                      res.map(item => {
+                        if (docs.length !== 0) {
+                          docs.map(d => {
+                            if (d.date === item.date) {
+                              check.push(item)
+                            }
+                          })
+                        }
                       })
                       if (check.length === 0) {
                         dispatch(submitslogs(res))
@@ -93,8 +95,6 @@ const AllDocuments = () => {
                   })
                 }
                 else dispatch(toaster.triggerError(`Failed to upload .... wrong file type`));
-
-
               }
               }
             />

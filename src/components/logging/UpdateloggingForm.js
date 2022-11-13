@@ -5,27 +5,25 @@ import { Controller, useForm } from 'react-hook-form';
 import { InputField, Button, DatePickerField, SelectField } from '../inputs';
 import logsActions from '../../redux/logging/actions';
 import moment from 'moment';
-const { submitLogs } = logsActions;
+const { updateLog } = logsActions;
 
-const CreateLogForm = () => {
+const UpdateLogForm = ({ logId, defaultValues, recordData }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector(({ Auth }) => Auth);
 
-
-  const { handleSubmit, control, formState, errors, reset, watch, defaultValues } = useForm({
+  const { handleSubmit, control, formState, errors, reset, watch } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      date: moment(), knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
+      knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
       learning: 0, planned: 0, externalSupport: 0, internalSupport: 0
     },
   });
 
-  // useEffect(() => {
-  //   if (editRecord !== null) {
-  //     reset(editRecord);
-  //   }
-  // }, [editRecord, reset]);
+  useEffect(() => {
+    if (defaultValues) {
+      reset({ ...defaultValues });
+    }
+  }, [defaultValues, reset]);
 
   const options = [
     { id: 0, value: '0' },
@@ -40,11 +38,11 @@ const CreateLogForm = () => {
   ]
 
   const onSubmit = (values) => {
-    dispatch(submitLogs({
+    dispatch(updateLog(logId, {
       ...values,
-      'user': { internalId: user?.id },
-      'day': moment(values.date).format('dddd'),
-      // 'date': values.date,
+      'user': { internalId: recordData?.user?.internalId },
+      'day': recordData?.day,
+      'date': recordData?.date,
       'collaboration': values.knowledgeSharing + values.teamMeetings + values.dailyStandup,
       'support': values.internalSupport + values.externalSupport,
       'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup + values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
@@ -55,21 +53,8 @@ const CreateLogForm = () => {
   return (
     <form className="col-12" onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
-        <div className="form-group col-3">
-          <Controller
-            as={DatePickerField}
-            control={control}
-            label="Date"
-            name="date"
-            value={moment(defaultValues?.date).format()}
-            type="number"
-            errors={errors}
-            rules={{ required: 'Required Field' }}
-            disabled
-          />
-        </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -83,7 +68,7 @@ const CreateLogForm = () => {
           />
         </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -97,7 +82,7 @@ const CreateLogForm = () => {
           />
         </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -114,7 +99,7 @@ const CreateLogForm = () => {
 
       <div className="row">
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -127,7 +112,7 @@ const CreateLogForm = () => {
           />
         </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -140,7 +125,7 @@ const CreateLogForm = () => {
           />
         </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -153,7 +138,7 @@ const CreateLogForm = () => {
           />
         </div>
 
-        <div className="form-group col-3">
+        <div className="form-group col-4">
           <Controller
             as={SelectField}
             control={control}
@@ -172,14 +157,12 @@ const CreateLogForm = () => {
           <p className='pr-2 font-weight-bold'>Collaboration:</p>
           <p>{(Number(watch('knowledgeSharing')) + Number(watch('teamMeetings')) + Number(watch('dailyStandup'))) / 60}</p>
         </div>
-      </div>
-      <div className="row">
+
         <div className="form-group col-4 d-flex">
           <p className='pr-2 font-weight-bold'>Support:</p>
           <p>{(Number(watch('externalSupport')) + Number(watch('internalSupport'))) / 60}</p>
         </div>
-      </div>
-      <div className="row">
+
         <div className="form-group col-4 d-flex">
           <p className='pr-2 font-weight-bold'>Man Hours:</p>
           <p>{(Number(watch('externalSupport')) +
@@ -204,4 +187,4 @@ const CreateLogForm = () => {
   );
 };
 
-export default CreateLogForm;
+export default UpdateLogForm;
