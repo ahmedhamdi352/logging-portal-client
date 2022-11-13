@@ -10,7 +10,6 @@ const { submitLogs } = logsActions;
 const ChangePasswordForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(({ Auth }) => Auth);
-  const { editRecord } = useSelector(({ documents }) => documents.editRecord);
 
 
   const { handleSubmit, control, formState, errors, reset, watch, defaultValues } = useForm({
