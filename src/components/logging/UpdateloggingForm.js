@@ -35,6 +35,9 @@ const UpdateLogForm = ({ logId, defaultValues, recordData }) => {
     { id: 300, value: 300 },
     { id: 360, value: 360 },
     { id: 420, value: 420 },
+    { id: 480, value: 480 },
+    { id: 540, value: 540 },
+    { id: 600, value: 600 },
   ]
 
   const onSubmit = (values) => {
