@@ -44,7 +44,7 @@ const CreateLogForm = () => {
       ...values,
       'user': { internalId: user?.id },
       'day': moment(values.date).format('dddd'),
-      // 'date': values.date,
+      'date': moment(values.date).format('YYYY-MM-DD'),
       'collaboration': values.knowledgeSharing + values.teamMeetings + values.dailyStandup,
       'support': values.internalSupport + values.externalSupport,
       'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup + values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
@@ -64,8 +64,13 @@ const CreateLogForm = () => {
             value={moment(defaultValues?.date).format()}
             type="number"
             errors={errors}
-            rules={{ required: 'Required Field' }}
-            disabled
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                if (moment(value).isSameOrBefore(moment())) return true;
+                else return 'Can not log future day';
+              },
+            }}
           />
         </div>
 

@@ -62,7 +62,7 @@ const AllDocuments = () => {
                       const res = rows.map((item => {
                         return {
                           'day': item[0],
-                          'date': moment(item[1]),
+                          'date': moment(item[1]).format('YYYY-MM-DD'),
                           'knowledgeSharing': item[2],
                           'teamMeetings': item[3],
                           'dailyStandup': item[4],

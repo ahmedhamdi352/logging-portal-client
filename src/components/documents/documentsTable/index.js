@@ -74,8 +74,7 @@ const DocumentsTable = ({ docs }) => {
         },
         filterOptions: {
           names: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-          logic: (data, filters, row) => {
-            console.log(moment(data).format('MMM'))
+          logic: (data, filters) => {
             if (filters.length) return !filters.includes(moment(data).format('MMM'));
             return false;
 
