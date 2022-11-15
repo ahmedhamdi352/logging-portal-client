@@ -50,7 +50,7 @@ const AllDocuments = () => {
             }}>
               Custom Upload
             </label>
-            <input id="file-upload" type="file" style={{ display: 'none' }}
+            <input accept=".xlsx, .xls" id="file-upload" type="file" style={{ display: 'none' }}
               onChange={(e) => {
                 if (e.target.files[0]?.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                   readXlsxFile(e.target.files[0]).then((rows) => {

@@ -88,18 +88,19 @@ class Sidebar extends Component {
             return (
               <Menu.Item style={submenuStyle} key={child.key}>
                 <Link style={submenuColor} to={linkTo}>
-                  <div
-                    style={{
-                      fontFamily: "'Montserrat', sans-serif",
-                      // fontWeight: 500,
-                      fontSize: '15px',
-                    }}
-                  >
-                    {child.text}
-                    {/* <b>
-                      <IntlMessages style={{ color: "red" }} id={child.label} />
-                    </b> */}
-                  </div>
+                  <span className="isoMenuHolder" style={submenuColor}>
+                    <i className={child.leftIcon} />
+                    <span className="nav-text">
+                      <div
+                        style={{
+                          fontFamily: "'Montserrat', sans-serif",
+                          fontSize: '15px',
+                        }}
+                      >
+                        {child.text}
+                      </div>
+                    </span>
+                  </span>
                 </Link>
               </Menu.Item>
             );
@@ -116,13 +117,11 @@ class Sidebar extends Component {
               <div
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
-                  // fontWeight: 500,
                   fontSize: '15px',
                 }}
               >
                 {text}
               </div>
-              {/* <IntlMessages id={label} /> */}
             </span>
           </span>
         </Link>
