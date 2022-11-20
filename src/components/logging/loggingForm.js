@@ -100,7 +100,7 @@ const CreateLogForm = () => {
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="Team Meetings"
             name="teamMeetings"
@@ -108,13 +108,19 @@ const CreateLogForm = () => {
             options={options}
             type='number'
             defaultValue={0}
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="Daily Standup"
             name="dailyStandup"
@@ -122,8 +128,14 @@ const CreateLogForm = () => {
             options={options}
             type='number'
             defaultValue={0}
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
       </div>
 
@@ -131,54 +143,78 @@ const CreateLogForm = () => {
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="Learning"
             name="learning"
             errors={errors}
             options={options}
             type='number'
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="Planned"
             name="planned"
             errors={errors}
             options={options}
             type='number'
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="External Support"
             name="externalSupport"
             errors={errors}
             options={options}
             type='number'
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
 
         <div className="form-group col-3">
           <Controller
-            as={SelectField}
+            as={InputField}
             control={control}
             label="Internal Support"
             name="internalSupport"
             errors={errors}
             options={options}
             type='number'
-            rules={{ required: 'Required Field' }}
-          />
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
         </div>
       </div>
 
