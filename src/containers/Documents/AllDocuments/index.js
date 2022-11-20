@@ -59,20 +59,21 @@ const AllDocuments = () => {
                       && rows[0]?.includes('Planned') && rows[0]?.includes('Internal Support') && rows[0]?.includes('External Support') && rows[0]?.includes('Support')
                       && rows[0]?.includes('vacation') && rows[0]?.includes('Manhour')) {
                       rows = drop(rows)
+                      console.log(rows)
                       const res = rows.map((item => {
                         return {
                           'day': item[0],
                           'date': moment(item[1]).format('YYYY-MM-DD'),
-                          'knowledgeSharing': item[2],
-                          'teamMeetings': item[3],
-                          'dailyStandup': item[4],
-                          'collaboration': item[5],
-                          'learning': item[6],
-                          'planned': item[7],
-                          'internalSupport': item[8],
-                          'externalSupport': item[9],
-                          'support': item[10],
-                          'manHour': item[12],
+                          'knowledgeSharing': item[2] === null ? 0 : item[2],
+                          'teamMeetings': item[3] === null ? 0 : item[3],
+                          'dailyStandup': item[4] === null ? 0 : item[4],
+                          'collaboration': item[5] === null ? 0 : item[5],
+                          'learning': item[6] === null ? 0 : item[6],
+                          'planned': item[7] === null ? 0 : item[7],
+                          'internalSupport': item[8] === null ? 0 : item[8],
+                          'externalSupport': item[9] === null ? 0 : item[9],
+                          'support': item[10] === null ? 0 : item[10],
+                          'manHour': item[12] === null ? 0 : item[12],
                           'user': { internalId: user?.id },
                         }
                       }))

@@ -58,13 +58,43 @@ const options = [
     label: 'sidebar.Dashboard',
     leftIcon: 'fas fa-receipt',
     text: 'Logging Time',
+    children: [
+      {
+        key: 'logs/all',
+        label: 'sidebar.Dashboard',
+        leftIcon: 'fas fa-receipt',
+        text: 'All Logs',
+      },
+      {
+        key: 'log',
+        label: 'sidebar.Dashboard',
+        leftIcon: 'fas fa-receipt',
+        text: 'Add Log',
+      },
+    ]
   },
+
   {
-    key: 'logs/all',
+    key: 'project',
     label: 'sidebar.Dashboard',
     leftIcon: 'fas fa-receipt',
-    text: 'All Logs',
+    text: 'Project Allocation',
+    children: [
+      {
+        key: 'project-types',
+        label: 'sidebar.Dashboard',
+        leftIcon: 'fas fa-receipt',
+        text: 'Project Types',
+      },
+      {
+        key: 'projects',
+        label: 'sidebar.Dashboard',
+        leftIcon: 'fas fa-receipt',
+        text: 'Projects',
+      },
+    ]
   },
+
   {
     key: 'setting',
     label: 'sidebar.Dashboard',
