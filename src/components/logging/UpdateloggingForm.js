@@ -23,6 +23,7 @@ const UpdateLogForm = ({ logId, defaultValues, recordData }) => {
 
   useEffect(() => {
     if (defaultValues) {
+      console.log(defaultValues)
       reset({ ...defaultValues });
     }
   }, [defaultValues, reset]);
@@ -44,19 +45,19 @@ const UpdateLogForm = ({ logId, defaultValues, recordData }) => {
 
   const onSubmit = (values) => {
     dispatch(updateLog(logId, {
-      learning:Number(values.learning),
-      planned:Number(values.planned),
-      internalSupport:Number(values.internalSupport),
-      externalSupport:Number(values.externalSupport),
-      knowledgeSharing:Number(values.knowledgeSharing),
-      teamMeetings:Number(values.teamMeetings),
-      dailyStandup:Number(values.dailyStandup),
-      'user': { internalId: user?.id },
-      'day': moment(values.date).format('dddd'),
-      'date': moment(values.date).format('YYYY-MM-DD'),
+      learning: Number(values.learning),
+      planned: Number(values.planned),
+      internalSupport: Number(values.internalSupport),
+      externalSupport: Number(values.externalSupport),
+      knowledgeSharing: Number(values.knowledgeSharing),
+      teamMeetings: Number(values.teamMeetings),
+      dailyStandup: Number(values.dailyStandup),
+      // 'user': { internalId: user?.id },
+      // 'day': moment(values.date).format('dddd'),
+      // 'date': moment(values.date).format('YYYY-MM-DD'),
       'collaboration': Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup),
       'support': Number(values.internalSupport) + Number(values.externalSupport),
-      'manHour': (Number(values.knowledgeSharing) +Number(values.teamMeetings) +Number(values.dailyStandup) + Number(values.internalSupport) +Number(values.externalSupport) +Number(values.planned) +Number(values.learning)) / 60
+      'manHour': (Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup) + Number(values.internalSupport) + Number(values.externalSupport) + Number(values.planned) + Number(values.learning)) / 60
     }))
     reset()
   };
