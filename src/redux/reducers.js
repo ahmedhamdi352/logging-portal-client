@@ -7,6 +7,9 @@ import documents from './documents/reducer';
 import setting from './setting/reducer';
 import notification from './notification/reducer';
 import role from './role/reducer';
+import projectTypes from './project-types/reducer'
+import projects from './projects/reducer'
+
 
 export default {
   App,
@@ -18,4 +21,6 @@ export default {
   Toaster,
   ThemeSwitcher,
   LanguageSwitcher,
+  projectTypes,
+  projects
 };

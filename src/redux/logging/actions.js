@@ -7,7 +7,6 @@ const actions = {
   ACTIVATE_LANG_MODAL: 'ACTIVATE_LANG_MODAL',
 
   submitLogs: (values) => (dispatch) => {
-    console.log(values)
     axios
       .post(`${ROOT_URL}/api/logs`, values)
       .then((res) => {

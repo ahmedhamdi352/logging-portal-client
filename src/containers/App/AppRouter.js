@@ -25,8 +25,12 @@ const routes = [
   },
 
   {
-    path: 'doc/:documentId',
-    component: asyncComponent(() => import('../Documents/DocumentDetails')),
+    path: 'project-types',
+    component: asyncComponent(() => import('../Allocation/project-types')),
+  },
+  {
+    path: 'projects',
+    component: asyncComponent(() => import('../Allocation/projects')),
   },
   {
     path: 'doc/json/:documentId',
