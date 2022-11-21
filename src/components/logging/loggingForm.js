@@ -44,13 +44,19 @@ const CreateLogForm = () => {
 
   const onSubmit = (values) => {
     dispatch(submitLogs({
-      ...values,
+      learning:Number(values.learning),
+      planned:Number(values.planned),
+      internalSupport:Number(values.internalSupport),
+      externalSupport:Number(values.externalSupport),
+      knowledgeSharing:Number(values.knowledgeSharing),
+      teamMeetings:Number(values.teamMeetings),
+      dailyStandup:Number(values.dailyStandup),
       'user': { internalId: user?.id },
       'day': moment(values.date).format('dddd'),
       'date': moment(values.date).format('YYYY-MM-DD'),
-      'collaboration': values.knowledgeSharing + values.teamMeetings + values.dailyStandup,
-      'support': values.internalSupport + values.externalSupport,
-      'manHour': (values.knowledgeSharing + values.teamMeetings + values.dailyStandup + values.internalSupport + values.externalSupport + values.planned + values.learning) / 60
+      'collaboration': Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup),
+      'support': Number(values.internalSupport) + Number(values.externalSupport),
+      'manHour': (Number(values.knowledgeSharing) +Number(values.teamMeetings) +Number(values.dailyStandup) + Number(values.internalSupport) +Number(values.externalSupport) +Number(values.planned) +Number(values.learning)) / 60
     }))
     reset()
   };
