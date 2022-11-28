@@ -7,17 +7,7 @@ import moment from 'moment';
 
 const UpdateLogModal = ({ visible, handleCancel, editable }) => {
   const dispatch = useDispatch()
-  // const { getBooks, flushBooks } = bookActions
   const [defaultValues, setDefaultValues] = useState(null);
-  // useEffect(() => {
-  //   if (editable) {
-  //     dispatch(getBooks(editable?.internalId));
-  //     return () => {
-  //       dispatch(flushBooks());
-  //     };
-  //   }
-  // }, [editable, dispatch, getBooks, flushBooks]);
-
   useEffect(() => {
     if (editable) {
       const {
@@ -30,10 +20,11 @@ const UpdateLogModal = ({ visible, handleCancel, editable }) => {
         externalSupport,
         knowledgeSharing,
         teamMeetings,
-        dailyStandup
+        dailyStandup,
+        vacation
       } = editable;
       setDefaultValues({
-        externalSupport, internalSupport, knowledgeSharing, dailyStandup, teamMeetings, learning, planned
+        vacation, externalSupport, internalSupport, knowledgeSharing, dailyStandup, teamMeetings, learning, planned
       });
     }
   }, [editable]);

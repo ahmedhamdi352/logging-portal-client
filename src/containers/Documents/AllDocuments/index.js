@@ -38,7 +38,7 @@ const AllDocuments = () => {
 
   return (
     <LayoutWrapper>
-      <Content style={{ padding: '0 20px', marginTop: '-10px' }}>
+      <Content style={{ marginTop: '-10px' }}>
         {loading ? (
           <Loader />
         ) : (

@@ -9,6 +9,7 @@ import UpdateLogModal from '../../common/updateLog'
 import { useDispatch } from 'react-redux';
 import LogsActions from '../../../redux/documents/actions'
 import moment from 'moment';
+import { render } from 'nprogress';
 
 const DocumentsTable = ({ docs }) => {
   const { deletLog, setEditRecord } = LogsActions
@@ -130,18 +131,32 @@ const DocumentsTable = ({ docs }) => {
       },
     },
     {
+      name: 'vacation',
+      label: 'Vacation',
+      options: {
+        filter: false,
+        sort: false,
+        customBodyRender: (value) => {
+          console.log(value)
+          return (
+            <div>
+              <p> {value === true ? 'Vacation' : '----'}</p>
+            </div>
+          )
+        }
+      },
+    },
+    {
       name: 'internalId',
       label: 'Actions',
       options: {
         filter: false,
         sort: false,
-        customBodyRender: (value, tableMeta, updateValue) => {
+        customBodyRender: (value) => {
           return (
             <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
               <Button onClick={() => openEditLogModal(value)}>
-                {/* <Link to="/dashboard/log"> */}
                 <EditIcon style={{ color: '#1890FF' }} />
-                {/* </Link> */}
               </Button>
               <Button onClick={() => {
                 deleteRecord(value)
