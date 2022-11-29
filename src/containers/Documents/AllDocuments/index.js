@@ -38,12 +38,12 @@ const AllDocuments = () => {
 
   return (
     <LayoutWrapper>
-      <Content style={{ padding: '0 20px', marginTop: '-10px' }}>
+      <Content style={{ marginTop: '-10px' }}>
         {loading ? (
           <Loader />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', width: '100%' }}>
-            <label for="file-upload" class="custom-file-upload" style={{
+            {/* <label for="file-upload" class="custom-file-upload" style={{
               padding: '6px 12px',
               color: 'white', backgroundColor: '#2D3446',
               borderRadius: '4px', cursor: 'pointer', border: '1px solid #ccc'
@@ -98,7 +98,7 @@ const AllDocuments = () => {
                 else dispatch(toaster.triggerError(`Failed to upload .... wrong file type`));
               }
               }
-            />
+            /> */}
             <div
               style={{
                 borderRadius: '10px',

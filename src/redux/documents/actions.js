@@ -65,7 +65,9 @@ const actions = {
       .delete(`${ROOT_URL}/api/logs/logs/${id}`)
       .then((res) => {
         dispatch(toaster.triggerSuccess('Log deleted successfully'));
-        dispatch(actions.getDocuments())
+        setTimeout(() => {
+          dispatch(actions.getDocuments())
+        }, 2000);
       })
       .catch((err) => {
         dispatch({ type: actions.GET_DOCS_ERROR });
