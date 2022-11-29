@@ -2,7 +2,7 @@ import axios from 'axios';
 import Auth0Helper from '../../helpers/auth0/index';
 import history from '../../helpers/auth0/history';
 import jwt_decode from 'jwt-decode';
-
+import toaster from '../toaster/actions';
 import { ROOT_URL } from '../keys';
 
 const actions = {
@@ -10,7 +10,47 @@ const actions = {
   LOGOUT: 'LOGOUT',
   LOGIN_SUCCESS: 'LOGIN_SUCCESS',
   LOGIN_ERROR: 'LOGIN_ERROR',
+  GET_RELATED_USERS: 'GET_RELATED_USERS',
+  FLUSHREALTEDUSERS: 'FLUSHREALTEDUSERS',
+  SET_AUTH_LOADING: 'SET_AUTH_LOADING',
+
   checkAuthorization: () => ({ type: actions.CHECK_AUTHORIZATION }),
+  getRelatedUsers: () => (dispatch) => {
+    try {
+      axios
+        .get(`${ROOT_URL}/api/user/getRelatedUser`)
+        .then((res) => {
+          dispatch({ type: actions.GET_RELATED_USERS, payload: res.data })
+        })
+        .catch((err) => {
+          console.log(err)
+        });
+    } catch (err) {
+      console.log('error_catched', err);
+    }
+  },
+  flushRelatedUsers: () => (dispatch) => {
+    dispatch({ type: actions.FLUSHREALTEDUSERS })
+  },
+
+  deleteUser: (id) => (dispatch) => {
+    dispatch({ type: actions.SET_AUTH_LOADING, payload: true })
+    axios
+      .delete(`${ROOT_URL}/api/user/${id}`)
+      .then((res) => {
+        dispatch({ type: actions.SET_AUTH_LOADING, payload: false })
+        dispatch(toaster.triggerSuccess('user deleted'));
+        setTimeout(() => {
+          dispatch(actions.getRelatedUsers());
+        }, 2000);
+      })
+      .catch((err) => {
+        let errorMsg = err.response?.data?.error;
+        dispatch(toaster.triggerError(errorMsg));
+        dispatch({ type: actions.SET_AUTH_LOADING, payload: false })
+      });
+
+  },
   login: (authData) => (dispatch) => {
     try {
       axios

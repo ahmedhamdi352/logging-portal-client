@@ -59,74 +59,87 @@ class Sidebar extends Component {
     return map[key] || [];
   };
   getMenuItem = ({ singleOption, submenuStyle, submenuColor }) => {
-    const { key, leftIcon, children, text } = singleOption; // label,
+    const { key, leftIcon, children, text, roles } = singleOption; // label,
     const url = stripTrailingSlash(this.props.url);
-    if (children) {
+    if (roles?.includes(this.props.user?.role)) {
+      if (children) {
+        return (
+          <SubMenu
+            key={key}
+            title={
+              <span className="isoMenuHolder" style={submenuColor}>
+                <i className={leftIcon} />
+                <span className="nav-text">
+                  <div
+                    style={{
+                      fontFamily: "'Montserrat', sans-serif",
+                      // fontWeight: 500,
+                      fontSize: '15px',
+                    }}
+                  >
+                    {text}
+                  </div>
+                </span>
+              </span>
+            }
+          >
+            {children.map((child) => {
+              const linkTo = child.withoutDashboard ? `/${child.key}` : `${url}/${child.key}`;
+              if (child?.roles?.includes(this.props.user?.role)) {
+                return (
+                  <Menu.Item style={submenuStyle} key={child.key}>
+                    <Link style={submenuColor} to={linkTo}>
+                      <span className="isoMenuHolder" style={submenuColor}>
+                        <i className={child.leftIcon} />
+                        <span className="nav-text">
+                          <div
+                            style={{
+                              fontFamily: "'Montserrat', sans-serif",
+                              fontSize: '15px',
+                            }}
+                          >
+                            {child.text}
+                          </div>
+                        </span>
+                      </span>
+                    </Link>
+                  </Menu.Item>
+                );
+              }
+              else {
+                return (
+                  <></>
+                )
+              }
+            })}
+          </SubMenu>
+        );
+      }
       return (
-        <SubMenu
-          key={key}
-          title={
+        <Menu.Item key={key}>
+          <Link to={`${url}/${key}`}>
             <span className="isoMenuHolder" style={submenuColor}>
               <i className={leftIcon} />
               <span className="nav-text">
                 <div
                   style={{
                     fontFamily: "'Montserrat', sans-serif",
-                    // fontWeight: 500,
                     fontSize: '15px',
                   }}
                 >
                   {text}
                 </div>
-                {/* <IntlMessages id={label} /> */}
               </span>
             </span>
-          }
-        >
-          {children.map((child) => {
-            const linkTo = child.withoutDashboard ? `/${child.key}` : `${url}/${child.key}`;
-            return (
-              <Menu.Item style={submenuStyle} key={child.key}>
-                <Link style={submenuColor} to={linkTo}>
-                  <span className="isoMenuHolder" style={submenuColor}>
-                    <i className={child.leftIcon} />
-                    <span className="nav-text">
-                      <div
-                        style={{
-                          fontFamily: "'Montserrat', sans-serif",
-                          fontSize: '15px',
-                        }}
-                      >
-                        {child.text}
-                      </div>
-                    </span>
-                  </span>
-                </Link>
-              </Menu.Item>
-            );
-          })}
-        </SubMenu>
+          </Link>
+        </Menu.Item>
       );
     }
-    return (
-      <Menu.Item key={key}>
-        <Link to={`${url}/${key}`}>
-          <span className="isoMenuHolder" style={submenuColor}>
-            <i className={leftIcon} />
-            <span className="nav-text">
-              <div
-                style={{
-                  fontFamily: "'Montserrat', sans-serif",
-                  fontSize: '15px',
-                }}
-              >
-                {text}
-              </div>
-            </span>
-          </span>
-        </Link>
-      </Menu.Item>
-    );
+    else {
+      return (
+        <></>
+      )
+    }
   };
   render() {
     const { app, toggleOpenDrawer, customizedTheme, height } = this.props;
@@ -194,6 +207,7 @@ export default connect(
     app: state.App,
     customizedTheme: state.ThemeSwitcher.sidebarTheme,
     height: state.App.height,
+    user: state.Auth.user
   }),
   { toggleOpenDrawer, changeOpenKeys, changeCurrent, toggleCollapsed }
 )(Sidebar);

@@ -58,18 +58,21 @@ const options = [
     label: 'sidebar.Dashboard',
     leftIcon: 'fas fa-receipt',
     text: 'Logging Time',
+    roles: ['manger', 'employee'],
     children: [
       {
         key: 'logs/all',
         label: 'sidebar.Dashboard',
         leftIcon: 'fas fa-receipt',
         text: 'All Logs',
+        roles: ['manger', 'employee',],
       },
       {
         key: 'log',
         label: 'sidebar.Dashboard',
         leftIcon: 'fas fa-receipt',
         text: 'Add Log',
+        roles: ['manger', 'employee',],
       },
     ]
   },
@@ -77,28 +80,47 @@ const options = [
   {
     key: 'project',
     label: 'sidebar.Dashboard',
-    leftIcon: 'fas fa-receipt',
+    leftIcon: 'fas fa-list',
     text: 'Project Allocation',
+    roles: ['admin', 'manger'],
     children: [
       {
         key: 'project-types',
         label: 'sidebar.Dashboard',
-        leftIcon: 'fas fa-receipt',
+        leftIcon: 'fas fa-flag',
         text: 'Project Types',
+        roles: ['admin']
       },
       {
         key: 'projects',
         label: 'sidebar.Dashboard',
         leftIcon: 'fas fa-receipt',
         text: 'Projects',
+        roles: ['admin']
+      },
+      {
+        key: 'add-allocation',
+        label: 'sidebar.Dashboard',
+        leftIcon: 'fas fa-calendar',
+        text: 'Add Allocation',
+        roles: ['admin', 'manger']
       },
     ]
   },
 
   {
-    key: 'setting',
+    key: 'team',
+    roles: ['manger', 'admin'],
     label: 'sidebar.Dashboard',
-    leftIcon: 'fas fa-cog',
+    leftIcon: 'fas fa-users',
+    text: 'Mange Team',
+  },
+
+  {
+    key: 'setting',
+    roles: ['manger', 'employee', 'admin'],
+    label: 'sidebar.Dashboard',
+    leftIcon: 'fas fa-unlock',
     text: 'change password',
   },
 

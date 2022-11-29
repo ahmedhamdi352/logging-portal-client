@@ -33,6 +33,14 @@ const routes = [
     component: asyncComponent(() => import('../Allocation/projects')),
   },
   {
+    path: 'team',
+    component: asyncComponent(() => import('../users')),
+  },
+  {
+    path: 'add-allocation',
+    component: asyncComponent(() => import('../Allocation/add-allocation')),
+  },
+  {
     path: 'doc/json/:documentId',
     component: asyncComponent(() => import('../Documents/DocumentDetailsJSON')),
   },

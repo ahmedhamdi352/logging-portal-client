@@ -3,7 +3,7 @@ import { isEmpty } from '../../helpers/utility';
 import Auth0Helper from '../../helpers/auth0/index';
 import jwt_decode from 'jwt-decode';
 
-const initState = { isAuthenticated: false, user: {}, errorMessage: null }; //idToken: null,
+const initState = { isAuthenticated: false, user: {}, errorMessage: null, relatedUsers: null }; //idToken: null,
 
 export default function authReducer(state = initState, action) {
   switch (action.type) {
@@ -30,9 +30,14 @@ export default function authReducer(state = initState, action) {
       }
 
     case actions.LOGOUT:
-      // Auth0Helper.logout();
-      //Set current user to {} which will set isAuthenticated to false
       return initState;
+
+    case actions.GET_RELATED_USERS:
+      return { ...state, relatedUsers: action.payload }
+
+    case actions.FLUSHREALTEDUSERS:
+      return { ...state, relatedUsers: null }
+
     case actions.LOGIN_ERROR:
       return { ...state, errorMessage: action.payload };
     default:

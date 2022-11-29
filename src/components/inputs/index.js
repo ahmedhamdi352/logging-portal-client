@@ -6,4 +6,5 @@ import CheckboxGroupField from './checkboxGroupField';
 import SwitchField from './switchField';
 import DatePickerField from './DatePicker';
 import ColorPicker from './colorPicker';
-export { ColorPicker, InputField, SelectField, ErrorMessage, Button, CheckboxGroupField, SwitchField, DatePickerField };
+import MonthPicker from './MonthPicker'
+export { MonthPicker, ColorPicker, InputField, SelectField, ErrorMessage, Button, CheckboxGroupField, SwitchField, DatePickerField };

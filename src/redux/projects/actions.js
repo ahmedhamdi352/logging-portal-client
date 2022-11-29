@@ -80,5 +80,17 @@ const actions = {
       });
   },
 
+  addAllocation: (data) => (dispatch) => {
+    axios
+      .post(`${ROOT_URL}/api/allocation`, data)
+      .then((res) => {
+        dispatch(toaster.triggerSuccess('Allocation added'));
+      })
+      .catch((err) => {
+        let errorMsg = err.response?.data?.error;
+        dispatch(toaster.triggerError(errorMsg));
+      });
+  },
+
 };
 export default actions;
