@@ -5,9 +5,11 @@ import MUIDataTable from 'mui-datatables';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteModal from '../../common/modal';
+import UpdateLogModal from '../../common/updateLog'
 import { useDispatch } from 'react-redux';
 import projectsActions from '../../../redux/projects/actions'
-import CreateTypeModal from '../createNewProjectModal';
+import moment from 'moment';
+import CreateTypeModal from '../createNewUserModal';
 
 const ProjectTable = ({ docs }) => {
   const { deleteProject } = projectsActions
@@ -50,15 +52,6 @@ const ProjectTable = ({ docs }) => {
   const columns = [
 
     {
-      name: 'trxNumber',
-      label: 'Trx Number',
-      options: {
-        filter: false,
-        sort: false,
-      },
-    },
-
-    {
       name: 'name',
       label: 'Name',
       options: {
@@ -66,7 +59,6 @@ const ProjectTable = ({ docs }) => {
         sort: false,
       },
     },
-
     {
       name: 'type',
       label: 'Type',
@@ -86,19 +78,18 @@ const ProjectTable = ({ docs }) => {
       },
     },
     {
-      name: 'customer',
-      label: 'Customer',
+      name: 'isActive',
+      label: 'Active',
       options: {
         filter: false,
         sort: false,
-      },
-    },
-    {
-      name: 'country',
-      label: 'Country',
-      options: {
-        filter: false,
-        sort: false,
+        customBodyRender: (value) => {
+          return (
+            <div>
+              {value === true ? 'Active' : 'Not Active'}
+            </div>
+          );
+        },
       },
     },
     {

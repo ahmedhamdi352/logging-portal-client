@@ -2,29 +2,40 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
-import { InputField, Button, DatePickerField, SwitchField } from '../inputs';
+import { InputField, Button, DatePickerField, SwitchField, SelectField } from '../inputs';
 import logsActions from '../../redux/logging/actions';
 import moment from 'moment';
+import { useState } from 'react';
+import { isEmpty } from '../../helpers/utility';
 const { submitLogs } = logsActions;
 
-const CreateLogForm = () => {
+const CreateLogForm = ({ projectOptions, userProjects }) => {
   const dispatch = useDispatch();
   const { user } = useSelector(({ Auth }) => Auth);
-
+  const [selectedProject, setSelectedProject] = useState([])
 
   const { handleSubmit, control, formState, errors, reset, watch, defaultValues } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      date: moment(), knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
-      learning: 0, planned: 0, externalSupport: 0, internalSupport: 0, vacation: false
+      date: moment(), project: 'none', knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
+      acceptedLearning: 0, personalLearning: 0, planned: 0, externalSupport: 0, internalSupport: 0, vacation: false
     },
   });
+
+  useEffect(() => {
+    const selected = userProjects.filter(item => item.internalId === watch('project'))
+    if (!isEmpty(selected)) {
+      setSelectedProject(selected[0]?.logTypes)
+    }
+  }, [watch('project'), userProjects])
 
   const onSubmit = (values) => {
     if (!values?.vacation) {
       dispatch(submitLogs({
-        learning: Number(values.learning),
+        project: values.project === 'none' ? null : { internalId: values.project },
+        acceptedLearning: Number(values.acceptedLearning),
+        personalLearning: Number(values.personalLearning),
         planned: Number(values.planned),
         internalSupport: Number(values.internalSupport),
         externalSupport: Number(values.externalSupport),
@@ -36,12 +47,16 @@ const CreateLogForm = () => {
         'date': moment(values.date).format('YYYY-MM-DD'),
         'collaboration': Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup),
         'support': Number(values.internalSupport) + Number(values.externalSupport),
-        'manHour': (Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup) + Number(values.internalSupport) + Number(values.externalSupport) + Number(values.planned) + Number(values.learning)) / 60,
+        'manHour': (Number(values.knowledgeSharing) + Number(values.teamMeetings) + Number(values.dailyStandup)
+          + Number(values.internalSupport) + Number(values.externalSupport) +
+          Number(values.planned) +
+          Number(values.personalLearning) + Number(values.acceptedLearning)) / 60,
       }))
     }
     else {
       dispatch(submitLogs({
-        learning: 0,
+        acceptedLearning: 0,
+        personalLearning: 0,
         planned: 0,
         internalSupport: 0,
         externalSupport: 0,
@@ -54,12 +69,24 @@ const CreateLogForm = () => {
         'collaboration': 0,
         'support': 0,
         'manHour': 0,
-        'vacation': values?.vacation
+        'vacation': values?.vacation,
+        project: null
       }))
 
     }
     reset()
   };
+
+  useEffect(() => {
+    if (watch('project') !== 'none') {
+      reset({
+        project: watch('project'),
+        date: watch('date'),
+        knowledgeSharing: 0, teamMeetings: 0, dailyStandup: 0,
+        acceptedLearning: 0, personalLearning: 0, planned: 0, externalSupport: 0, internalSupport: 0, vacation: false
+      })
+    }
+  }, [watch('project')])
 
   return (
     <form className="col-12" onSubmit={handleSubmit(onSubmit)}>
@@ -84,9 +111,63 @@ const CreateLogForm = () => {
 
         <div className="form-group col-3">
           <Controller
-            as={InputField}
+            as={SelectField}
             control={control}
             disabled={watch('vacation')}
+            options={projectOptions}
+            label="Project"
+            name="project"
+            errors={errors}
+          />
+        </div>
+
+        <div className="form-group col-3">
+          <Controller
+            as={InputField}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('personal-learning'))}
+            control={control}
+            label="Personal Learning"
+            name="personalLearning"
+            errors={errors}
+            type='number'
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
+        </div>
+
+        <div className="form-group col-3">
+          <Controller
+            as={InputField}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('accepted-learning'))}
+            control={control}
+            label="Accepted Learning"
+            name="acceptedLearning"
+            errors={errors}
+            type='number'
+            rules={{
+              required: 'Required Field',
+              validate: (value) => {
+                console.log(value % 60)
+                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
+                else return 'Worng Format';
+              },
+            }} />
+        </div>
+
+
+      </div>
+      <div className="row">
+
+        <div className="form-group col-3">
+          <Controller
+            as={InputField}
+            control={control}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('knowledge-sharing'))}
             label="knowledge Sharing"
             name="knowledgeSharing"
             errors={errors}
@@ -107,7 +188,7 @@ const CreateLogForm = () => {
           <Controller
             as={InputField}
             control={control}
-            disabled={watch('vacation')}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('team-meetings'))}
             label="Team Meetings"
             name="teamMeetings"
             errors={errors}
@@ -127,7 +208,7 @@ const CreateLogForm = () => {
           <Controller
             as={InputField}
             control={control}
-            disabled={watch('vacation')}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('daily-standup'))}
             label="Daily Standup"
             name="dailyStandup"
             errors={errors}
@@ -142,32 +223,12 @@ const CreateLogForm = () => {
               },
             }} />
         </div>
-      </div>
 
-      <div className="row">
-        <div className="form-group col-3">
-          <Controller
-            as={InputField}
-            disabled={watch('vacation')}
-            control={control}
-            label="Learning"
-            name="learning"
-            errors={errors}
-            type='number'
-            rules={{
-              required: 'Required Field',
-              validate: (value) => {
-                console.log(value % 60)
-                if (value % 60 === 0 || value % 60 === 30 || value % 60 === 15 || value % 60 === 45) return true;
-                else return 'Worng Format';
-              },
-            }} />
-        </div>
 
         <div className="form-group col-3">
           <Controller
             as={InputField}
-            disabled={watch('vacation')}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('planned'))}
             control={control}
             label="Planned"
             name="planned"
@@ -186,7 +247,7 @@ const CreateLogForm = () => {
         <div className="form-group col-3">
           <Controller
             as={InputField}
-            disabled={watch('vacation')}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('external-support'))}
             control={control}
             label="External Support"
             name="externalSupport"
@@ -206,7 +267,7 @@ const CreateLogForm = () => {
           <Controller
             as={InputField}
             control={control}
-            disabled={watch('vacation')}
+            disabled={watch('vacation') || (watch('project') !== 'none' && !selectedProject.includes('internal-support'))}
             label="Internal Support"
             name="internalSupport"
             errors={errors}
@@ -221,12 +282,12 @@ const CreateLogForm = () => {
             }} />
         </div>
       </div>
-
       <div className="col-12 col-lg-6">
         <div className="form-group">
           <Controller as={SwitchField} control={control} label="Vacation:" name="vacation" errors={errors} />
         </div>
       </div>
+
 
       <div className="row">
         <div className="form-group col-4 d-flex">
@@ -244,7 +305,8 @@ const CreateLogForm = () => {
             Number(watch('knowledgeSharing')) +
             Number(watch('teamMeetings')) +
             Number(watch('planned')) +
-            Number(watch('learning')) +
+            Number(watch('personalLearning')) +
+            Number(watch('acceptedLearning')) +
             Number(watch('dailyStandup'))) / 60}</p>
         </div>
       </div>

@@ -5,12 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import LayoutWrapper from '../../components/utility/layoutWrapper.js';
 import Loader from '../../components/utility/loader';
 import userActions from '../../redux/auth/actions';
+import roleActions from '../../redux/role/actions';
 import UsersTable from '../../components/users/usersTable';
-import CreateNewProject from '../../components/projects/createNewProjectModal'
+import CreateNewUser from '../../components/users/createNewUserModal'
 import { Layout } from 'antd';
 import { Button } from 'antd';
 
-const { getRelatedUsers, flushRelatedUsers } = userActions;
+const { getRelatedUsers, flushRelatedUsers, getMangers } = userActions;
+const { getRoles } = roleActions;
 
 const { Content } = Layout;
 
@@ -25,6 +27,10 @@ const AllUsers = () => {
 
   useEffect(() => {
     dispatch(getRelatedUsers());
+    dispatch(getRoles())
+    if (user?.role !== 'manger') {
+      dispatch(getMangers())
+    }
     return () => {
       dispatch(flushRelatedUsers());
     };
@@ -68,7 +74,7 @@ const AllUsers = () => {
           </div>
         )}
       </Content>
-      {openCreateModal && <CreateNewProject visible={openCreateModal} handleCancel={() => setOpenModal(false)} />}
+      {openCreateModal && <CreateNewUser visible={openCreateModal} handleCancel={() => setOpenModal(false)} />}
       <ToastContainer autoClose={4000} hideProgressBar={true} />
     </LayoutWrapper>
   );

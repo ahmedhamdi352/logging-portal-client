@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import LayoutWrapper from '../../../components/utility/layoutWrapper.js';
 import Loader from '../../../components/utility/loader';
 import docsActions from '../../../redux/documents/actions';
+import projectActions from '../../../redux/projects/actions'
 import toaster from '../../../redux/toaster/actions';
 
 import DocumentsTable from '../../../components/documents/documentsTable';
@@ -23,6 +24,13 @@ const AllDocuments = () => {
   const documents = useSelector(({ documents }) => documents.documents);
   const loading = useSelector(({ documents }) => documents.loading);
   const { user } = useSelector(({ Auth }) => Auth);
+  const { userProjects } = useSelector(({ projects }) => projects);
+
+  const [userProjectOptions, setUserProjects] = useState([{
+    id: 'none', value: 'none'
+  }])
+  const [relatedProjects, setRelatedProjects] = useState([])
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDocuments());
@@ -35,6 +43,25 @@ const AllDocuments = () => {
       setDocs(documents);
     }
   }, [documents]);
+
+  useEffect(() => {
+    dispatch(projectActions.getUserProjects())
+    return () => {
+      dispatch(projectActions.flushProjects());
+    };
+  }, [])
+  useEffect(() => {
+    if (userProjects !== null) {
+      setRelatedProjects(userProjects)
+      const projectOptions = userProjects.map(item => {
+        return {
+          id: item?.internalId,
+          value: item?.name
+        }
+      })
+      setUserProjects([...userProjectOptions, ...projectOptions])
+    }
+  }, [userProjects])
 
   return (
     <LayoutWrapper>
@@ -107,7 +134,7 @@ const AllDocuments = () => {
                 width: '100%'
               }}
             >
-              <DocumentsTable docs={docs} />
+              <DocumentsTable docs={docs} projectOptions={userProjectOptions} userProjects={relatedProjects} />
             </div>
           </div>
         )}

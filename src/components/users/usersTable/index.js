@@ -9,7 +9,7 @@ import UpdateLogModal from '../../common/updateLog'
 import { useDispatch } from 'react-redux';
 import userActions from '../../../redux/auth/actions'
 import moment from 'moment';
-import CreateTypeModal from '../createNewProjectModal';
+import CreateTypeModal from '../createNewUserModal';
 
 const UserTable = ({ docs }) => {
   const { deleteUser } = userActions

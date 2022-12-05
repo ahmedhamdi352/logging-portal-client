@@ -7,6 +7,7 @@ const actions = {
   GET_PROJECTS_ERROR: 'GET_PROJECTS_ERROR',
   GET_PROJECTS: 'GET_PROJECTS',
   FLUSH_PROJECTS: 'FLUSH_PROJECTS',
+  GET_USER_PROJECTS: 'GET_USER_PROJECTS',
 
   getProjects: () => (dispatch) => {
     dispatch({ type: actions.SET_PROJECTS_LOADING, payload: true })
@@ -23,6 +24,27 @@ const actions = {
           }
         ))
         dispatch({ type: actions.GET_PROJECTS, payload: result });
+      })
+      .catch((err) => {
+        dispatch({ type: actions.SET_PROJECTS_LOADING, payload: false })
+        dispatch({ type: actions.GET_PROJECTS_ERROR });
+      });
+  },
+  getUserProjects: () => (dispatch) => {
+    dispatch({ type: actions.SET_PROJECTS_LOADING, payload: true })
+    axios
+      .get(`${ROOT_URL}/api/project/userProjects`)
+      .then((res) => {
+        dispatch({ type: actions.SET_PROJECTS_LOADING, payload: false })
+        const result = res?.data.map(item => (
+          {
+            ...item,
+            type: item?.type?.name,
+            typeID: item?.type?.internalId,
+            color: item?.type?.color
+          }
+        ))
+        dispatch({ type: actions.GET_USER_PROJECTS, payload: result });
       })
       .catch((err) => {
         dispatch({ type: actions.SET_PROJECTS_LOADING, payload: false })

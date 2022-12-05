@@ -3,7 +3,7 @@ import { isEmpty } from '../../helpers/utility';
 import Auth0Helper from '../../helpers/auth0/index';
 import jwt_decode from 'jwt-decode';
 
-const initState = { isAuthenticated: false, user: {}, errorMessage: null, relatedUsers: null }; //idToken: null,
+const initState = { isAuthenticated: false, user: {}, errorMessage: null, relatedUsers: null, mangers: null }; //idToken: null,
 
 export default function authReducer(state = initState, action) {
   switch (action.type) {
@@ -37,6 +37,9 @@ export default function authReducer(state = initState, action) {
 
     case actions.FLUSHREALTEDUSERS:
       return { ...state, relatedUsers: null }
+
+    case actions.GET_MANGERS:
+      return { ...state, mangers: action.payload }
 
     case actions.LOGIN_ERROR:
       return { ...state, errorMessage: action.payload };

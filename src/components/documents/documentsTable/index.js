@@ -11,7 +11,7 @@ import LogsActions from '../../../redux/documents/actions'
 import moment from 'moment';
 import { render } from 'nprogress';
 
-const DocumentsTable = ({ docs }) => {
+const DocumentsTable = ({ docs, projectOptions, userProjects }) => {
   const { deletLog, setEditRecord } = LogsActions
   const dispatch = useDispatch();
 
@@ -99,8 +99,16 @@ const DocumentsTable = ({ docs }) => {
       },
     },
     {
-      name: 'learning',
-      label: 'Learning',
+      name: 'acceptedLearning',
+      label: 'Accepted Learning',
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+    {
+      name: 'personalLearning',
+      label: 'Personal Learning',
       options: {
         filter: false,
         sort: false,
@@ -123,6 +131,14 @@ const DocumentsTable = ({ docs }) => {
       },
     },
     {
+      name: 'project',
+      label: 'Project',
+      options: {
+        filter: false,
+        sort: false,
+      },
+    },
+    {
       name: 'manHour',
       label: 'Man Hours',
       options: {
@@ -130,22 +146,22 @@ const DocumentsTable = ({ docs }) => {
         sort: false,
       },
     },
-    {
-      name: 'vacation',
-      label: 'Vacation',
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value) => {
-          console.log(value)
-          return (
-            <div>
-              <p> {value === true ? 'Vacation' : '----'}</p>
-            </div>
-          )
-        }
-      },
-    },
+    // {
+    //   name: 'vacation',
+    //   label: 'Vacation',
+    //   options: {
+    //     filter: false,
+    //     sort: false,
+    //     customBodyRender: (value) => {
+    //       console.log(value)
+    //       return (
+    //         <div>
+    //           <p> {value === true ? 'Vacation' : '----'}</p>
+    //         </div>
+    //       )
+    //     }
+    //   },
+    // },
     {
       name: 'internalId',
       label: 'Actions',
@@ -202,7 +218,7 @@ const DocumentsTable = ({ docs }) => {
         options={options}
       />
       <DeleteModal visible={deletedAlert} handleCancel={handleCancelDelete} deleteAction={deleteAction} />
-      <UpdateLogModal editable={editable} visible={updateLogModalVisible} handleCancel={() => closeEditLogModal()} />
+      <UpdateLogModal projectOptions={projectOptions} userProjects={userProjects} editable={editable} visible={updateLogModalVisible} handleCancel={() => closeEditLogModal()} />
     </>
   );
 };

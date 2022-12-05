@@ -4,19 +4,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import CreateProjectForm from './createProjectForm';
 
 const CreateProjectModal = ({ visible, handleCancel, editable }) => {
-  const dispatch = useDispatch()
 
   const types = useSelector(({ projectTypes }) => projectTypes.projectTypes);
 
 
   const [defaultValues, setDefaultValues] = useState(null)
 
+  const countryOption = [
+    { id: 'EGYPT', value: 'EGYPT' },
+    { id: 'KSA', value: 'KSA' },
+    { id: 'UAE', value: 'UAE' }
+  ]
   useEffect(() => {
     if (editable) {
+      console.log(editable)
       const type = types?.filter(item => item.name === editable?.type)
       setDefaultValues({ ...editable, type: type[0]?.internalId })
     }
   }, [editable]);
+
 
   const getTypeOptions = () => {
     return types?.map(item => {
@@ -29,7 +35,7 @@ const CreateProjectModal = ({ visible, handleCancel, editable }) => {
 
   return (
     <Modal maskClosable={false} centered title={`Create New Project`} visible={visible} onCancel={handleCancel} footer={null}>
-      <CreateProjectForm typeOptions={getTypeOptions()} defaultValues={defaultValues} handleCancel={handleCancel} />
+      <CreateProjectForm countryOption={countryOption} typeOptions={getTypeOptions()} defaultValues={defaultValues} handleCancel={handleCancel} />
     </Modal>
   );
 };

@@ -7,35 +7,71 @@ import projectsActions from '../../redux/projects/actions';
 import { useEffect } from 'react';
 const { createProject, editProject } = projectsActions;
 
-const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions }) => {
+const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions, countryOption }) => {
   const dispatch = useDispatch();
 
   const { handleSubmit, control, formState, errors, reset, watch } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      name: '', type: ''
+      name: '', type: '', country: '', customer: '', trxNumber: '', logTypes: []
     },
   });
 
   useEffect(() => {
     if (defaultValues !== null) {
-      console.log("here", defaultValues)
-      reset({ name: defaultValues?.name, type: defaultValues?.type });
+      reset(defaultValues);
     }
   }, [defaultValues, reset]);
 
   const onSubmit = (values) => {
     if (defaultValues !== null) {
-      dispatch(editProject(defaultValues?.internalId, { name: values.name, type: { internalId: values.type } }))
+      dispatch(editProject(defaultValues?.internalId,
+        { ...values, type: { internalId: values.type }, logTypes: values.logTypes.join() }))
     }
     else {
-      dispatch(createProject({ name: values.name, type: { internalId: values.type } }))
+      console.log(values)
+      dispatch(createProject({ ...values, type: { internalId: values.type }, logTypes: values.logTypes.join() }))
     }
     handleCancel()
     reset()
   };
 
+
+  const options = [
+    {
+      id: 'planned',
+      value: 'planned'
+    },
+    {
+      id: 'personal-learning',
+      value: 'personal-learning'
+    },
+    {
+      id: 'accepted-learning',
+      value: 'accepted-learning'
+    },
+    {
+      id: 'internal-support',
+      value: 'internal-support'
+    },
+    {
+      id: 'external-support',
+      value: 'external-support'
+    },
+    {
+      id: 'team-meetings',
+      value: 'team-meetings'
+    },
+    {
+      id: 'daily-standup',
+      value: 'daily-standup'
+    },
+    {
+      id: 'knowledge-sharing',
+      value: 'knowledge-sharing'
+    }
+  ]
   return (
     <form className="col-12" onSubmit={handleSubmit(onSubmit)}>
       <div className="row">
@@ -67,13 +103,66 @@ const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions }) => {
           />
         </div>
 
-        {/* <ColorPicker color={color} setColor={setColor} /> */}
+        <div className="form-group col-6">
+          <Controller
+            as={InputField}
+            control={control}
+            label="Customer"
+            name="customer"
+            errors={errors}
+            rules={{
+              required: 'Required Field',
+            }}
+          />
+        </div>
+
+        <div className="form-group col-6">
+          <Controller
+            as={InputField}
+            control={control}
+            label="TRX Number"
+            name="trxNumber"
+            type="number"
+            errors={errors}
+            rules={{
+              required: 'Required Field',
+            }}
+          />
+        </div>
+
+        <div className="form-group col-6">
+          <Controller
+            as={SelectField}
+            options={countryOption}
+            control={control}
+            label="Country"
+            name="country"
+            errors={errors}
+            rules={{
+              required: 'Required Field',
+            }}
+          />
+        </div>
+
+        <div className="form-group col-6">
+          <Controller
+            as={SelectField}
+            control={control}
+            mode="multiple"
+            options={options}
+            label="Log types"
+            name="logTypes"
+            errors={errors}
+            rules={{
+              required: 'Required Field',
+            }}
+          />
+        </div>
 
       </div>
       <Divider />
       <div className="row">
         <div className="form-group col-4 col-lg-1">
-          {/* disabled={!formState.isValid} */}
           <Button size="large" htmlType="submit" type="primary" disabled={!formState.isValid} >
             Save
           </Button>

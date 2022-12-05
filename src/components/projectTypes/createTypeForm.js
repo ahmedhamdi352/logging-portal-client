@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Divider } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
-import { InputField, Button, ColorPicker, } from '../inputs';
+import { InputField, Button, ColorPicker, SelectField, } from '../inputs';
 import typesActions from '../../redux/project-types/actions';
 import { useEffect } from 'react';
 const { createType, editType } = typesActions;
@@ -12,11 +12,13 @@ const UpdateLogForm = ({ handleCancel, defaultValues }) => {
 
   const [color, setColor] = useState('#0000')
 
+
+
   const { handleSubmit, control, formState, errors, reset, watch } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      name: '', color: ''
+      name: '', color: '', logTypes: ''
     },
   });
 
