@@ -21,7 +21,7 @@ const CreateAllocationForm = () => {
       const Projects = projectsData.map(item => {
         return {
           id: item?.internalId,
-          value: item?.name
+          value: `${item?.name} - ${item?.type}`
         }
       })
       setProjects(Projects);
