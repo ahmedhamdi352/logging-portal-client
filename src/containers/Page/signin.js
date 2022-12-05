@@ -17,6 +17,7 @@ const SignIn = ({ history }) => {
   const dispatch = useDispatch();
   const { errorMessage } = useSelector(({ Auth }) => Auth);
   const isAuthenticated = useSelector((state) => state.Auth.isAuthenticated);
+  const { user } = useSelector(({ Auth }) => Auth);
 
 
   useEffect(() => {
@@ -25,7 +26,9 @@ const SignIn = ({ history }) => {
       const { redirect } = queryString.parse(history.location.search);
       if (isAuthenticated && !!redirect) history.push(redirect);
     }
-    else if (isAuthenticated) history.push('/dashboard/log');
+    else if (isAuthenticated && user?.role === 'admin') history.push('/dashboard/add-allocation');
+    else if (isAuthenticated && (user?.role === 'manger' || user?.role === 'employee')) history.push('/dashboard/logs/all');
+
 
     if (errorMessage) setErrorMsg(errorMessage);
   }, [isAuthenticated, errorMessage, history]);
