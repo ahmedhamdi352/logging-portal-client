@@ -50,8 +50,8 @@ const ProjectTable = ({ docs }) => {
   const columns = [
 
     {
-      name: 'trxNumber',
-      label: 'Trx Number',
+      name: 'soNumber',
+      label: 'Sales Order Number',
       options: {
         filter: false,
         sort: false,

@@ -242,7 +242,7 @@ const UpdateLogForm = ({ logId, defaultValues, projectOptions, userProjects }) =
         </div>
       </div>
       <div className="row">
-        <div className="form-group col-3">
+        <div className="form-group col-6">
           <Controller
             as={SelectField}
             control={control}

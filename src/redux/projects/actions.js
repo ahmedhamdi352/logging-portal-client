@@ -1,7 +1,7 @@
 import axios from 'axios';
 import toaster from '../toaster/actions';
 import { ROOT_URL } from '../keys';
-
+import {uniqBy} from 'lodash'
 const actions = {
   SET_PROJECTS_LOADING: 'SET_PROJECTS_LOADING',
   GET_PROJECTS_ERROR: 'GET_PROJECTS_ERROR',
@@ -44,7 +44,9 @@ const actions = {
             color: item?.type?.color
           }
         ))
-        dispatch({ type: actions.GET_USER_PROJECTS, payload: result });
+        dispatch({
+          type: actions.GET_USER_PROJECTS, payload: uniqBy(result, 'internalId')
+        });
       })
       .catch((err) => {
         dispatch({ type: actions.SET_PROJECTS_LOADING, payload: false })

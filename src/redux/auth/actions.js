@@ -58,13 +58,18 @@ const actions = {
   },
 
   createUser: (user) => (dispatch) => {
+    dispatch({ type: actions.SET_AUTH_LOADING, payload: true })
     axios
       .post(`${ROOT_URL}/api/user`, user)
       .then((res) => {
         dispatch(toaster.triggerSuccess('User created'));
         dispatch(actions.getRelatedUsers());
+        dispatch(actions.getMangers())
+        dispatch({ type: actions.SET_AUTH_LOADING, payload: false })
+
       })
       .catch((err) => {
+        dispatch({ type: actions.SET_AUTH_LOADING, payload: false })
         let errorMsg = err.response?.data?.message ? err.response?.data?.message : err.response?.data?.error;
         dispatch(toaster.triggerError(errorMsg));
       });

@@ -17,7 +17,6 @@ const CreateProjectModal = ({ visible, handleCancel, editable }) => {
   ]
   useEffect(() => {
     if (editable) {
-      console.log(editable)
       const type = types?.filter(item => item.name === editable?.type)
       setDefaultValues({ ...editable, type: type[0]?.internalId })
     }

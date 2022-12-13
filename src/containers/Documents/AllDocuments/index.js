@@ -70,14 +70,14 @@ const AllDocuments = () => {
           <Loader />
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', width: '100%' }}>
-            <label for="file-upload" class="custom-file-upload" style={{
+            {/* <label for="file-upload" class="custom-file-upload" style={{
               padding: '6px 12px',
               color: 'white', backgroundColor: '#2D3446',
               borderRadius: '4px', cursor: 'pointer', border: '1px solid #ccc'
             }}>
               Custom Upload
-            </label>
-            <input accept=".xlsx, .xls" id="file-upload" type="file" style={{ display: 'none' }}
+            </label> */}
+            {/* <input accept=".xlsx, .xls" id="file-upload" type="file" style={{ display: 'none' }}
               onChange={(e) => {
                 if (e.target.files[0]?.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                   readXlsxFile(e.target.files[0]).then((rows) => {
@@ -125,7 +125,7 @@ const AllDocuments = () => {
                 else dispatch(toaster.triggerError(`Failed to upload .... wrong file type`));
               }
               }
-            />
+            /> */}
             <div
               style={{
                 borderRadius: '10px',

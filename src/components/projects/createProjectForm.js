@@ -14,7 +14,7 @@ const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions, countryOption
     mode: 'onChange',
     reValidateMode: 'onChange',
     defaultValues: {
-      name: '', type: '', country: '', customer: '', trxNumber: '', logTypes: []
+      name: '', type: '', country: '', customer: '', soNumber: '', logTypes: []
     },
   });
 
@@ -27,11 +27,23 @@ const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions, countryOption
   const onSubmit = (values) => {
     if (defaultValues !== null) {
       dispatch(editProject(defaultValues?.internalId,
-        { ...values, type: { internalId: values.type }, logTypes: values.logTypes.join() }))
+        {
+          ...values,
+          customer: values.customer === '' ? null : values.customer,
+          soNumber: values.soNumber === '' ? null : values.soNumber,
+          type: { internalId: values.type },
+          logTypes: values.logTypes.join()
+
+        }))
     }
     else {
-      console.log(values)
-      dispatch(createProject({ ...values, type: { internalId: values.type }, logTypes: values.logTypes.join() }))
+      dispatch(createProject({
+        ...values,
+        customer: values.customer === '' ? null : values.customer,
+        soNumber: values.soNumber === '' ? null : values.soNumber,
+        type: { internalId: values.type },
+        logTypes: values.logTypes.join()
+      }))
     }
     handleCancel()
     reset()
@@ -110,9 +122,9 @@ const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions, countryOption
             label="Customer"
             name="customer"
             errors={errors}
-            rules={{
-              required: 'Required Field',
-            }}
+          // rules={{
+          //   required: 'Required Field',
+          // }}
           />
         </div>
 
@@ -120,13 +132,13 @@ const UpdateLogForm = ({ handleCancel, defaultValues, typeOptions, countryOption
           <Controller
             as={InputField}
             control={control}
-            label="TRX Number"
-            name="trxNumber"
+            label="Sales order Number"
+            name="soNumber"
             type="number"
             errors={errors}
-            rules={{
-              required: 'Required Field',
-            }}
+          // rules={{
+          //   required: 'Required Field',
+          // }}
           />
         </div>
 
